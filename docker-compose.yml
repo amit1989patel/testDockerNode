@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  web:
+    build: ./web
+    environment:
+      DATABASE_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: stormlight
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: supersecret
+    ports:
+      - "3257:3257"
+    depends_on:
+      - db
+    restart: on-failure 
+    
+  db:
+    build: ./db
+    environment:
+      MYSQL_DATABASE: stormlight
+      MYSQL_ROOT_PASSWORD: supersecret
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: supersecret
+      DATABASE_HOST: db
+    ports:
+      - "3306:3306"
+    
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_PORT: 3306
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: supersecret
+    ports:
+      - "8004:80"
+    restart: always
+    depends_on: 
+      - db
+    
